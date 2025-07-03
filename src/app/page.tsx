@@ -10,6 +10,8 @@ import {
   Bot,
   Loader2,
   Image as ImageIcon,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -19,9 +21,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { aiBackgroundRemoval } from '@/ai/flows/ai-background-removal';
 import { aiUpscale } from '@/ai/flows/ai-upscaling';
+import { aiCompression } from '@/ai/flows/ai-compression';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type Scale = '2x' | '4x';
+const MAX_SIZE_BYTES = 4 * 1024 * 1024; // 4MB
 
 export default function Home() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -29,20 +34,22 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [operation, setOperation] = useState<string | null>(null);
   const [scale, setScale] = useState<Scale>('2x');
+  const [isImageTooLarge, setIsImageTooLarge] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 4 * 1024 * 1024) { // 4MB limit
+      if (file.size > 40 * 1024 * 1024) { // 40MB limit for browser
         toast({
           title: "File too large",
-          description: "Please upload an image smaller than 4MB.",
+          description: "Please upload an image smaller than 40MB.",
           variant: "destructive",
         });
         return;
       }
+      setIsImageTooLarge(file.size > MAX_SIZE_BYTES); // Check against AI limit
       const reader = new FileReader();
       reader.onloadend = () => {
         setOriginalImage(reader.result as string);
@@ -56,8 +63,35 @@ export default function Home() {
     fileInputRef.current?.click();
   };
 
-  const handleBackgroundRemoval = async () => {
+  const handleCompression = async () => {
     if (!originalImage) return;
+    setIsLoading(true);
+    setOperation('compress');
+    setProcessedImage(null);
+    try {
+      const result = await aiCompression({ photoDataUri: originalImage, targetSizeMB: 4 });
+      setOriginalImage(result.compressedPhotoDataUri);
+      setIsImageTooLarge(false);
+      toast({
+        title: "Image Compressed",
+        description: "Your image is now ready for editing.",
+        action: <div className="p-1 rounded-full bg-green-500"><CheckCircle2 className="h-5 w-5 text-white" /></div>,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error compressing image",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setOperation(null);
+    }
+  };
+
+  const handleBackgroundRemoval = async () => {
+    if (!originalImage || isImageTooLarge) return;
     setIsLoading(true);
     setOperation('bg-removal');
     setProcessedImage(null);
@@ -78,7 +112,7 @@ export default function Home() {
   };
   
   const handleUpscale = async () => {
-    if (!originalImage) return;
+    if (!originalImage || isImageTooLarge) return;
     setIsLoading(true);
     setOperation('upscale');
     setProcessedImage(null);
@@ -115,6 +149,19 @@ export default function Home() {
     document.body.removeChild(link);
   };
   
+  const getLoadingMessage = () => {
+    switch (operation) {
+      case 'bg-removal':
+        return 'Removing background...';
+      case 'upscale':
+        return 'Upscaling image...';
+      case 'compress':
+        return 'Compressing image...';
+      default:
+        return 'Processing...';
+    }
+  };
+  
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-start p-4 sm:p-8 md:p-12">
       <div className="w-full max-w-7xl mx-auto">
@@ -141,9 +188,22 @@ export default function Home() {
                 <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
                   Choose a file
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 4MB</p>
+                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 40MB (AI processing limit: 4MB)</p>
               </CardContent>
             </Card>
+
+            {isImageTooLarge && !isLoading && (
+              <Alert variant="destructive" className="shadow-lg rounded-xl">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Image Too Large for AI</AlertTitle>
+                <AlertDescription className="mt-2">
+                  The AI can only process images up to 4MB. Please compress your image to continue.
+                  <Button onClick={handleCompression} className="w-full mt-4" size="sm">
+                    <Bot className="mr-2 h-4 w-4" /> Compress with AI
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
             
             <Card className={`shadow-lg rounded-xl transition-opacity duration-300 ${!originalImage ? 'opacity-50 pointer-events-none' : ''}`}>
               <CardHeader>
@@ -154,7 +214,7 @@ export default function Home() {
                 <div>
                   <Label className="text-base font-medium">Background Removal</Label>
                   <div className="grid grid-cols-1 gap-2 mt-2">
-                    <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage}>
+                    <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage || isImageTooLarge}>
                       <Bot className="mr-2 h-4 w-4" /> Remove with Google AI
                     </Button>
                     <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
@@ -179,7 +239,7 @@ export default function Home() {
                       </div>
                     </RadioGroup>
                     <div className="grid grid-cols-1 gap-2">
-                      <Button onClick={handleUpscale} disabled={isLoading || !originalImage}>
+                      <Button onClick={handleUpscale} disabled={isLoading || !originalImage || isImageTooLarge}>
                         <Bot className="mr-2 h-4 w-4" /> Upscale with Google AI
                       </Button>
                       <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
@@ -225,7 +285,7 @@ export default function Home() {
                     <Loader2 className="h-16 w-16 animate-spin" />
                     <p className="mt-4 font-semibold text-lg">Processing...</p>
                     <p className="text-sm text-muted-foreground">
-                      {operation === 'bg-removal' ? 'Removing background...' : 'Upscaling image...'}
+                      {getLoadingMessage()}
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">This may take a moment.</p>
                   </div>

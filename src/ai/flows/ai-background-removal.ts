@@ -31,13 +31,6 @@ export async function aiBackgroundRemoval(input: AiBackgroundRemovalInput): Prom
   return aiBackgroundRemovalFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'aiBackgroundRemovalPrompt',
-  input: {schema: AiBackgroundRemovalInputSchema},
-  output: {schema: AiBackgroundRemovalOutputSchema},
-  prompt: `Remove the background from this image: {{media url=photoDataUri}}. Return the image as a data URI.`,
-});
-
 const aiBackgroundRemovalFlow = ai.defineFlow(
   {
     name: 'aiBackgroundRemovalFlow',
@@ -53,6 +46,10 @@ const aiBackgroundRemovalFlow = ai.defineFlow(
       },
     });
 
-    return {processedPhotoDataUri: media.url!};
+    if (!media?.url) {
+      throw new Error('No media returned from background removal.');
+    }
+
+    return {processedPhotoDataUri: media.url};
   }
 );

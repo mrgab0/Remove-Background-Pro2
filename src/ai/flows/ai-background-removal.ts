@@ -17,6 +17,10 @@ const AiBackgroundRemovalInputSchema = z.object({
     .describe(
       "A photo to remove the background from, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  intensity: z
+    .enum(['subtle', 'standard', 'aggressive'])
+    .default('standard')
+    .describe('The intensity of the background removal.'),
 });
 export type AiBackgroundRemovalInput = z.infer<typeof AiBackgroundRemovalInputSchema>;
 
@@ -38,8 +42,20 @@ const aiBackgroundRemovalFlow = ai.defineFlow(
     outputSchema: AiBackgroundRemovalOutputSchema,
   },
   async input => {
+    let promptText = 'Remove the background from this image.';
+    switch (input.intensity) {
+      case 'subtle':
+        promptText =
+          'Gently remove the background from this image, preserving as much of the main subject as possible, including fine details like hair. The result should have clean, soft edges.';
+        break;
+      case 'aggressive':
+        promptText =
+          'Aggressively and completely remove the background from this image. Create a very clean, sharp cutout of the main subject, even if it means some fine details are lost. Prioritize complete background removal.';
+        break;
+    }
+
     const {media} = await ai.generate({
-      prompt: [{media: {url: input.photoDataUri}}, {text: 'Remove the background from this image'}],
+      prompt: [{media: {url: input.photoDataUri}}, {text: promptText}],
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       config: {
         responseModalities: ['TEXT', 'IMAGE'],

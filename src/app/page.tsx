@@ -26,6 +26,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type Scale = '2x' | '4x';
+type BgRemovalIntensity = 'subtle' | 'standard' | 'aggressive';
 const MAX_SIZE_BYTES = 4 * 1024 * 1024; // 4MB
 
 export default function Home() {
@@ -34,6 +35,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [operation, setOperation] = useState<string | null>(null);
   const [scale, setScale] = useState<Scale>('2x');
+  const [bgRemovalIntensity, setBgRemovalIntensity] = useState<BgRemovalIntensity>('standard');
   const [isImageTooLarge, setIsImageTooLarge] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -96,7 +98,7 @@ export default function Home() {
     setOperation('bg-removal');
     setProcessedImage(null);
     try {
-      const result = await aiBackgroundRemoval({ photoDataUri: originalImage });
+      const result = await aiBackgroundRemoval({ photoDataUri: originalImage, intensity: bgRemovalIntensity });
       setProcessedImage(result.processedPhotoDataUri);
     } catch (error) {
       console.error(error);
@@ -188,7 +190,7 @@ export default function Home() {
                 <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
                   Choose a file
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 40MB (AI processing limit: 4MB)</p>
+                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 4MB</p>
               </CardContent>
             </Card>
 
@@ -213,13 +215,32 @@ export default function Home() {
               <CardContent className="space-y-6">
                 <div>
                   <Label className="text-base font-medium">Background Removal</Label>
-                  <div className="grid grid-cols-1 gap-2 mt-2">
-                    <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage || isImageTooLarge}>
-                      <Bot className="mr-2 h-4 w-4" /> Remove with Google AI
-                    </Button>
-                    <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
-                      <Scissors className="mr-2 h-4 w-4" /> Remove with Rembg
-                    </Button>
+                  <div className="mt-2 space-y-4">
+                    <div>
+                      <Label className="text-sm font-normal text-muted-foreground">Intensity</Label>
+                      <RadioGroup value={bgRemovalIntensity} onValueChange={(value) => setBgRemovalIntensity(value as BgRemovalIntensity)} className="flex gap-4 pt-2">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="subtle" id="subtle" />
+                          <Label htmlFor="subtle" className="font-normal">Subtle</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="standard" id="standard" />
+                          <Label htmlFor="standard" className="font-normal">Standard</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="aggressive" id="aggressive" />
+                          <Label htmlFor="aggressive" className="font-normal">Aggressive</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage || isImageTooLarge}>
+                        <Bot className="mr-2 h-4 w-4" /> Remove with Google AI
+                      </Button>
+                      <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
+                        <Scissors className="mr-2 h-4 w-4" /> Remove with Rembg
+                      </Button>
+                    </div>
                   </div>
                 </div>
 

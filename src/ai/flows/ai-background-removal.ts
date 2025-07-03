@@ -1,0 +1,58 @@
+'use server';
+
+/**
+ * @fileOverview Removes the background from an image using Google's generative AI.
+ *
+ * - aiBackgroundRemoval - A function that handles the background removal process.
+ * - AiBackgroundRemovalInput - The input type for the aiBackgroundRemoval function.
+ * - AiBackgroundRemovalOutput - The return type for the aiBackgroundRemoval function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const AiBackgroundRemovalInputSchema = z.object({
+  photoDataUri: z
+    .string()
+    .describe(
+      "A photo to remove the background from, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+});
+export type AiBackgroundRemovalInput = z.infer<typeof AiBackgroundRemovalInputSchema>;
+
+const AiBackgroundRemovalOutputSchema = z.object({
+  processedPhotoDataUri: z
+    .string()
+    .describe('The photo with the background removed, as a data URI.'),
+});
+export type AiBackgroundRemovalOutput = z.infer<typeof AiBackgroundRemovalOutputSchema>;
+
+export async function aiBackgroundRemoval(input: AiBackgroundRemovalInput): Promise<AiBackgroundRemovalOutput> {
+  return aiBackgroundRemovalFlow(input);
+}
+
+const prompt = ai.definePrompt({
+  name: 'aiBackgroundRemovalPrompt',
+  input: {schema: AiBackgroundRemovalInputSchema},
+  output: {schema: AiBackgroundRemovalOutputSchema},
+  prompt: `Remove the background from this image: {{media url=photoDataUri}}. Return the image as a data URI.`,
+});
+
+const aiBackgroundRemovalFlow = ai.defineFlow(
+  {
+    name: 'aiBackgroundRemovalFlow',
+    inputSchema: AiBackgroundRemovalInputSchema,
+    outputSchema: AiBackgroundRemovalOutputSchema,
+  },
+  async input => {
+    const {media} = await ai.generate({
+      prompt: [{media: {url: input.photoDataUri}, text: 'Remove the background from this image'}],
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      config: {
+        responseModalities: ['TEXT', 'IMAGE'],
+      },
+    });
+
+    return {processedPhotoDataUri: media.url!};
+  }
+);

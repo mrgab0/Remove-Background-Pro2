@@ -39,7 +39,7 @@ const aiBackgroundRemovalFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      prompt: [{media: {url: input.photoDataUri}, text: 'Remove the background from this image'}],
+      prompt: [{media: {url: input.photoDataUri}}, {text: 'Remove the background from this image'}],
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       config: {
         responseModalities: ['TEXT', 'IMAGE'],

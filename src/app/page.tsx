@@ -10,7 +10,6 @@ import {
   Bot,
   Loader2,
   Image as ImageIcon,
-  Terminal,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -21,7 +20,6 @@ import { useToast } from '@/hooks/use-toast';
 import { aiBackgroundRemoval } from '@/ai/flows/ai-background-removal';
 import { aiUpscale } from '@/ai/flows/ai-upscaling';
 import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Scale = '2x' | '4x';
 
@@ -37,10 +35,10 @@ export default function Home() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 40 * 1024 * 1024) { // 40MB limit
+      if (file.size > 4 * 1024 * 1024) { // 4MB limit
         toast({
           title: "File too large",
-          description: "Please upload an image smaller than 40MB.",
+          description: "Please upload an image smaller than 4MB.",
           variant: "destructive",
         });
         return;
@@ -125,16 +123,6 @@ export default function Home() {
           <p className="text-muted-foreground mt-2 text-lg">Your one-stop solution for image editing with AI.</p>
         </header>
 
-        <Alert className="mb-8">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>¡Atención!</AlertTitle>
-          <AlertDescription>
-            Para utilizar las funciones de IA, necesitas una clave de API de Google AI. 
-            Consigue tu clave en <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline">Google AI Studio</a>, 
-            añádela a tu archivo <code>.env</code> como <code>GOOGLE_API_KEY=TU_CLAVE_AQUI</code> y reinicia el servidor.
-          </AlertDescription>
-        </Alert>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
             <Card className="shadow-lg rounded-xl">
@@ -153,7 +141,7 @@ export default function Home() {
                 <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
                   Choose a file
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 40MB</p>
+                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 4MB</p>
               </CardContent>
             </Card>
             

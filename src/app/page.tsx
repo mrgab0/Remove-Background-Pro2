@@ -37,10 +37,10 @@ export default function Home() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 4 * 1024 * 1024) { // 4MB limit for Gemini
+      if (file.size > 40 * 1024 * 1024) { // 40MB limit
         toast({
           title: "File too large",
-          description: "Please upload an image smaller than 4MB.",
+          description: "Please upload an image smaller than 40MB.",
           variant: "destructive",
         });
         return;
@@ -153,7 +153,7 @@ export default function Home() {
                 <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
                   Choose a file
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 4MB</p>
+                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 40MB</p>
               </CardContent>
             </Card>
             

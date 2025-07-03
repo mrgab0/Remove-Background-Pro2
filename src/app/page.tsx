@@ -10,6 +10,7 @@ import {
   Bot,
   Loader2,
   Image as ImageIcon,
+  Terminal,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -20,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { aiBackgroundRemoval } from '@/ai/flows/ai-background-removal';
 import { aiUpscale } from '@/ai/flows/ai-upscaling';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Scale = '2x' | '4x';
 
@@ -122,6 +124,16 @@ export default function Home() {
           <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">Remove Background Pro</h1>
           <p className="text-muted-foreground mt-2 text-lg">Your one-stop solution for image editing with AI.</p>
         </header>
+
+        <Alert className="mb-8">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>¡Atención!</AlertTitle>
+          <AlertDescription>
+            Para utilizar las funciones de IA, necesitas una clave de API de Google AI. 
+            Consigue tu clave en <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline">Google AI Studio</a>, 
+            añádela a tu archivo <code>.env</code> como <code>GOOGLE_API_KEY=TU_CLAVE_AQUI</code> y reinicia el servidor.
+          </AlertDescription>
+        </Alert>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">

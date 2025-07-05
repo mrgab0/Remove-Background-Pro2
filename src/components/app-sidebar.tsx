@@ -10,7 +10,7 @@ const menuItems = [
   { href: "/seccion/2", label: "Sección 2", icon: LayoutDashboard },
   { href: "/seccion/3", label: "Sección 3", icon: Bot },
   { href: "/seccion/4", label: "Sección 4", icon: Users },
-  { href: "/seccion/5", label: "Sección 5", icon: Settings },
+  { href: "/seccion/5", label: "Ajustes", icon: Settings },
 ];
 
 export function AppSidebar() {

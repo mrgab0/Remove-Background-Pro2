@@ -57,6 +57,50 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  .dark-barbie {
+    --background: 330 15% 10%;
+    --foreground: 330 80% 90%;
+    --card: 330 15% 15%;
+    --card-foreground: 330 80% 90%;
+    --popover: 330 15% 15%;
+    --popover-foreground: 330 80% 90%;
+    --primary: 330 90% 65%;
+    --primary-foreground: 330 90% 10%;
+    --secondary: 330 15% 25%;
+    --secondary-foreground: 330 80% 90%;
+    --muted: 330 15% 25%;
+    --muted-foreground: 330 20% 65%;
+    --accent: 330 90% 55%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 330 15% 25%;
+    --input: 330 15% 25%;
+    --ring: 330 90% 65%;
+  }
+
+  .dark-captain-america {
+    --background: 220 15% 10%;
+    --foreground: 210 40% 98%;
+    --card: 220 15% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217 33% 25%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 25%;
+    --muted-foreground: 210 40% 65%;
+    --accent: 0 84% 60%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 217 91% 60%;
+  }
 }
 
 @layer base {

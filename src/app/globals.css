@@ -60,15 +60,15 @@
 
   .dark-barbie {
     --background: 330 15% 10%;
-    --foreground: 330 80% 90%;
+    --foreground: 300 100% 90%;
     --card: 330 15% 15%;
-    --card-foreground: 330 80% 90%;
+    --card-foreground: 300 100% 90%;
     --popover: 330 15% 15%;
-    --popover-foreground: 330 80% 90%;
+    --popover-foreground: 300 100% 90%;
     --primary: 330 90% 65%;
     --primary-foreground: 330 90% 10%;
     --secondary: 330 15% 25%;
-    --secondary-foreground: 330 80% 90%;
+    --secondary-foreground: 300 100% 90%;
     --muted: 330 15% 25%;
     --muted-foreground: 330 20% 65%;
     --accent: 330 90% 55%;

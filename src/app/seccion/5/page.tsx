@@ -43,7 +43,7 @@ export default function AjustesPage() {
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="dark-barbie" id="barbie" />
-                <Label htmlFor="barbie">Barbie Theme</Label>
+                <Label htmlFor="barbie">Barbie Dark Theme</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="dark-captain-america" id="captain-america" />

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
+import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
 
 export const metadata: Metadata = {
-  title: 'Remove Background Pro',
+  title: 'App Pro',
   description: 'AI-powered image background removal and upscaling.',
 };
 
@@ -23,8 +25,15 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
-        {children}
+      <body className="font-body antialiased bg-muted/40">
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <main className="p-4 sm:p-8 md:p-12">
+              {children}
+            </main>
+          </SidebarInset>
+        </SidebarProvider>
         <Toaster />
       </body>
     </html>

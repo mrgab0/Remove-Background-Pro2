@@ -165,165 +165,163 @@ export default function Home() {
   };
   
   return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-start p-4 sm:p-8 md:p-12">
-      <div className="w-full max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">Remove Background Pro</h1>
-          <p className="text-muted-foreground mt-2 text-lg">Your one-stop solution for image editing with AI.</p>
-        </header>
+    <div className="w-full">
+      <header className="text-center mb-12">
+        <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">Edición de imagen</h1>
+        <p className="text-muted-foreground mt-2 text-lg">Su solución integral para la edición de imágenes con IA.</p>
+      </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 space-y-8">
-            <Card className="shadow-lg rounded-xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><UploadCloud className="h-6 w-6 text-accent" /> Upload Image</CardTitle>
-                <CardDescription>Start by uploading an image from your device.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept="image/png, image/jpeg, image/webp"
-                />
-                <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
-                  Choose a file
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1 space-y-8">
+          <Card className="shadow-lg rounded-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><UploadCloud className="h-6 w-6 text-accent" /> Subir Imagen</CardTitle>
+              <CardDescription>Comience cargando una imagen desde su dispositivo.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/png, image/jpeg, image/webp"
+              />
+              <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
+                Elegir un archivo
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2 text-center">Tamaño máximo de archivo: 4 MB</p>
+            </CardContent>
+          </Card>
+
+          {isImageTooLarge && !isLoading && (
+            <Alert variant="destructive" className="shadow-lg rounded-xl">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Imagen Demasiado Grande para la IA</AlertTitle>
+              <AlertDescription className="mt-2">
+                La IA solo puede procesar imágenes de hasta 4 MB. Por favor, comprima su imagen para continuar.
+                <Button onClick={handleCompression} className="w-full mt-4" size="sm">
+                  <Bot className="mr-2 h-4 w-4" /> Comprimir con IA
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Max file size: 4MB</p>
-              </CardContent>
-            </Card>
-
-            {isImageTooLarge && !isLoading && (
-              <Alert variant="destructive" className="shadow-lg rounded-xl">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Image Too Large for AI</AlertTitle>
-                <AlertDescription className="mt-2">
-                  The AI can only process images up to 4MB. Please compress your image to continue.
-                  <Button onClick={handleCompression} className="w-full mt-4" size="sm">
-                    <Bot className="mr-2 h-4 w-4" /> Compress with AI
-                  </Button>
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            <Card className={`shadow-lg rounded-xl transition-opacity duration-300 ${!originalImage ? 'opacity-50 pointer-events-none' : ''}`}>
-              <CardHeader>
-                <CardTitle>Editing Tools</CardTitle>
-                <CardDescription>Select a tool to process your image.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label className="text-base font-medium">Background Removal</Label>
-                  <div className="mt-2 space-y-4">
-                    <div>
-                      <Label className="text-sm font-normal text-muted-foreground">Intensity</Label>
-                      <RadioGroup value={bgRemovalIntensity} onValueChange={(value) => setBgRemovalIntensity(value as BgRemovalIntensity)} className="flex gap-4 pt-2">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="subtle" id="subtle" />
-                          <Label htmlFor="subtle" className="font-normal">Subtle</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="standard" id="standard" />
-                          <Label htmlFor="standard" className="font-normal">Standard</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="aggressive" id="aggressive" />
-                          <Label htmlFor="aggressive" className="font-normal">Aggressive</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2">
-                      <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage || isImageTooLarge}>
-                        <Bot className="mr-2 h-4 w-4" /> Remove with Google AI
-                      </Button>
-                      <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
-                        <Scissors className="mr-2 h-4 w-4" /> Remove with Rembg
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <Label className="text-base font-medium">Image Upscaling</Label>
-                  <div className="mt-2 space-y-4">
-                    <RadioGroup value={scale} onValueChange={(value: string) => setScale(value as Scale)} className="flex gap-4">
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          <Card className={`shadow-lg rounded-xl transition-opacity duration-300 ${!originalImage ? 'opacity-50 pointer-events-none' : ''}`}>
+            <CardHeader>
+              <CardTitle>Herramientas de Edición</CardTitle>
+              <CardDescription>Seleccione una herramienta para procesar su imagen.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label className="text-base font-medium">Eliminación de Fondo</Label>
+                <div className="mt-2 space-y-4">
+                  <div>
+                    <Label className="text-sm font-normal text-muted-foreground">Intensidad</Label>
+                    <RadioGroup value={bgRemovalIntensity} onValueChange={(value) => setBgRemovalIntensity(value as BgRemovalIntensity)} className="flex gap-4 pt-2">
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="2x" id="2x" />
-                        <Label htmlFor="2x">2x</Label>
+                        <RadioGroupItem value="subtle" id="subtle" />
+                        <Label htmlFor="subtle" className="font-normal">Sutil</Label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="4x" id="4x" />
-                        <Label htmlFor="4x">4x</Label>
+                        <RadioGroupItem value="standard" id="standard" />
+                        <Label htmlFor="standard" className="font-normal">Estándar</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="aggressive" id="aggressive" />
+                        <Label htmlFor="aggressive" className="font-normal">Agresiva</Label>
                       </div>
                     </RadioGroup>
-                    <div className="grid grid-cols-1 gap-2">
-                      <Button onClick={handleUpscale} disabled={isLoading || !originalImage || isImageTooLarge}>
-                        <Bot className="mr-2 h-4 w-4" /> Upscale with Google AI
-                      </Button>
-                      <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
-                        <Maximize className="mr-2 h-4 w-4" /> Upscale with FFmpeg
-                      </Button>
-                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 pt-4">
+                    <Button onClick={handleBackgroundRemoval} disabled={isLoading || !originalImage || isImageTooLarge}>
+                      <Bot className="mr-2 h-4 w-4" /> Eliminar con IA de Google
+                    </Button>
+                    <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
+                      <Scissors className="mr-2 h-4 w-4" /> Eliminar con Rembg
+                    </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="shadow-lg rounded-xl">
-              <CardHeader>
-                <CardTitle>Original Image</CardTitle>
-              </CardHeader>
-              <CardContent className="aspect-square flex items-center justify-center bg-card-foreground/5 rounded-lg p-2">
-                {originalImage ? (
-                  <Image src={originalImage} alt="Original" width={500} height={500} className="rounded-md object-contain max-h-[400px] max-w-full" />
-                ) : (
-                  <div className="text-center text-muted-foreground p-8 flex flex-col items-center justify-center">
-                    <ImageIcon className="h-16 w-16 mb-4" />
-                    <p className="font-semibold">Upload an image to get started</p>
-                    <p className="text-sm">Your image will be displayed here.</p>
+              <Separator />
+
+              <div>
+                <Label className="text-base font-medium">Ampliación de Imagen</Label>
+                <div className="mt-2 space-y-4">
+                  <RadioGroup value={scale} onValueChange={(value: string) => setScale(value as Scale)} className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="2x" id="2x" />
+                      <Label htmlFor="2x">2x</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="4x" id="4x" />
+                      <Label htmlFor="4x">4x</Label>
+                    </div>
+                  </RadioGroup>
+                  <div className="grid grid-cols-1 gap-2 pt-4">
+                    <Button onClick={handleUpscale} disabled={isLoading || !originalImage || isImageTooLarge}>
+                      <Bot className="mr-2 h-4 w-4" /> Ampliar con IA de Google
+                    </Button>
+                    <Button onClick={showPlaceholderToast} disabled={isLoading || !originalImage} variant="secondary">
+                      <Maximize className="mr-2 h-4 w-4" /> Ampliar con FFmpeg
+                    </Button>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-lg rounded-xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle>Processed Image</CardTitle>
-                {processedImage && !isLoading && (
-                  <Button onClick={handleDownload} size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                  </Button>
-                )}
-              </CardHeader>
-              <CardContent className="aspect-square flex items-center justify-center bg-card-foreground/5 rounded-lg p-2">
-                {isLoading ? (
-                  <div className="text-center text-primary p-8 flex flex-col items-center justify-center">
-                    <Loader2 className="h-16 w-16 animate-spin" />
-                    <p className="mt-4 font-semibold text-lg">Processing...</p>
-                    <p className="text-sm text-muted-foreground">
-                      {getLoadingMessage()}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">This may take a moment.</p>
-                  </div>
-                ) : processedImage ? (
-                  <Image src={processedImage} alt="Processed" width={500} height={500} className="rounded-md object-contain max-h-[400px] max-w-full" />
-                ) : (
-                  <div className="text-center text-muted-foreground p-8 flex flex-col items-center justify-center">
-                    <ImageIcon className="h-16 w-16 mb-4" />
-                    <p className="font-semibold">Your masterpiece awaits</p>
-                    <p className="text-sm">The processed image will appear here.</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="shadow-lg rounded-xl">
+            <CardHeader>
+              <CardTitle>Imagen Original</CardTitle>
+            </CardHeader>
+            <CardContent className="aspect-square flex items-center justify-center bg-card-foreground/5 rounded-lg p-2">
+              {originalImage ? (
+                <Image src={originalImage} alt="Original" width={500} height={500} className="rounded-md object-contain max-h-full max-w-full" />
+              ) : (
+                <div className="text-center text-muted-foreground p-8 flex flex-col items-center justify-center">
+                  <ImageIcon className="h-16 w-16 mb-4" />
+                  <p className="font-semibold">Suba una imagen para comenzar</p>
+                  <p className="text-sm">Su imagen se mostrará aquí.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-lg rounded-xl">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle>Imagen Procesada</CardTitle>
+              {processedImage && !isLoading && (
+                <Button onClick={handleDownload} size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                  <Download className="mr-2 h-4 w-4" /> Descargar
+                </Button>
+              )}
+            </CardHeader>
+            <CardContent className="aspect-square flex items-center justify-center bg-card-foreground/5 rounded-lg p-2">
+              {isLoading ? (
+                <div className="text-center text-primary p-8 flex flex-col items-center justify-center">
+                  <Loader2 className="h-16 w-16 animate-spin" />
+                  <p className="mt-4 font-semibold text-lg">Procesando...</p>
+                  <p className="text-sm text-muted-foreground">
+                    {getLoadingMessage()}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">Esto puede tomar un momento.</p>
+                </div>
+              ) : processedImage ? (
+                <Image src={processedImage} alt="Processed" width={500} height={500} className="rounded-md object-contain max-h-full max-w-full" />
+              ) : (
+                <div className="text-center text-muted-foreground p-8 flex flex-col items-center justify-center">
+                  <ImageIcon className="h-16 w-16 mb-4" />
+                  <p className="font-semibold">Su obra maestra espera</p>
+                  <p className="text-sm">La imagen procesada aparecerá aquí.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

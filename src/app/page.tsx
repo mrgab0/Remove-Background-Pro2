@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import {
   UploadCloud,
@@ -12,6 +12,7 @@ import {
   Image as ImageIcon,
   AlertCircle,
   CheckCircle2,
+  MoveDown,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -37,8 +38,17 @@ export default function Home() {
   const [scale, setScale] = useState<Scale>('2x');
   const [bgRemovalIntensity, setBgRemovalIntensity] = useState<BgRemovalIntensity>('standard');
   const [isImageTooLarge, setIsImageTooLarge] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Show tutorial only on the client-side after mount and if no image is loaded.
+    if (!originalImage) {
+      const timer = setTimeout(() => setShowTutorial(true), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [originalImage]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -51,6 +61,7 @@ export default function Home() {
         });
         return;
       }
+      setShowTutorial(false); // Hide tutorial arrow
       setIsImageTooLarge(file.size > MAX_SIZE_BYTES); // Check against AI limit
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -165,11 +176,18 @@ export default function Home() {
   };
   
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <header className="text-center mb-12">
         <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">Edición de imagen</h1>
         <p className="text-muted-foreground mt-2 text-lg">Su solución integral para la edición de imágenes con IA.</p>
       </header>
+
+      {showTutorial && (
+        <div className="absolute top-48 left-1/4 z-10 animate-tutorial-arrow">
+          <p className="text-lg font-bold text-primary -rotate-12 mb-2">¡Empieza aquí!</p>
+          <MoveDown className="w-20 h-20 text-primary -rotate-45" />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-8">

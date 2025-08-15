@@ -58,8 +58,8 @@ export default function Home() {
       if (uploadButtonRef.current) {
         const rect = uploadButtonRef.current.getBoundingClientRect();
         setArrowPosition({
-          top: rect.top + window.scrollY - 80, // Adjust position to be above the button
-          left: rect.left + window.scrollX + rect.width / 2 - 40, // Center the arrow
+ top: rect.top + window.scrollY - 80, // Adjust position to be above the button
+ left: window.innerWidth / 2 - 400, // Anchor horizontally in the center
         });
       }
     };

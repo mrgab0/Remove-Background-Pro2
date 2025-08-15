@@ -39,7 +39,10 @@ export default function Home() {
   const [bgRemovalIntensity, setBgRemovalIntensity] = useState<BgRemovalIntensity>('standard');
   const [isImageTooLarge, setIsImageTooLarge] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [arrowPosition, setArrowPosition] = useState({ top: 0, left: 0 });
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadButtonRef = useRef<HTMLButtonElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -49,6 +52,30 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [originalImage]);
+
+  useEffect(() => {
+    const updateArrowPosition = () => {
+      if (uploadButtonRef.current) {
+        const rect = uploadButtonRef.current.getBoundingClientRect();
+        setArrowPosition({
+          top: rect.top + window.scrollY - 80, // Adjust position to be above the button
+          left: rect.left + window.scrollX + rect.width / 2 - 40, // Center the arrow
+        });
+      }
+    };
+    
+    if (showTutorial) {
+      updateArrowPosition();
+      window.addEventListener('resize', updateArrowPosition);
+      window.addEventListener('scroll', updateArrowPosition);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateArrowPosition);
+      window.removeEventListener('scroll', updateArrowPosition);
+    };
+  }, [showTutorial]);
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -183,7 +210,10 @@ export default function Home() {
       </header>
 
       {showTutorial && (
-        <div className="absolute top-48 left-1/4 z-10 animate-tutorial-arrow">
+        <div 
+          className="absolute z-10 animate-tutorial-arrow"
+          style={{ top: `${arrowPosition.top}px`, left: `${arrowPosition.left}px` }}
+        >
           <p className="text-lg font-bold text-primary -rotate-12 mb-2">¡Empieza aquí!</p>
           <MoveDown className="w-20 h-20 text-primary rotate-[135deg]" strokeWidth={3} />
         </div>
@@ -204,7 +234,7 @@ export default function Home() {
                 className="hidden"
                 accept="image/png, image/jpeg, image/webp"
               />
-              <Button onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
+              <Button ref={uploadButtonRef} onClick={handleUploadClick} className="w-full" size="lg" variant="outline">
                 Elegir un archivo
               </Button>
               <p className="text-xs text-muted-foreground mt-2 text-center">Tamaño máximo de archivo: 4 MB</p>

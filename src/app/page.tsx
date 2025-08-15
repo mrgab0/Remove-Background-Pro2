@@ -185,7 +185,7 @@ export default function Home() {
       {showTutorial && (
         <div className="absolute top-48 left-1/4 z-10 animate-tutorial-arrow">
           <p className="text-lg font-bold text-primary -rotate-12 mb-2">¡Empieza aquí!</p>
-          <MoveDown className="w-20 h-20 text-primary -rotate-45" />
+          <MoveDown className="w-20 h-20 text-primary rotate-[135deg]" strokeWidth={3} />
         </div>
       )}
 

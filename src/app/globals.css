@@ -60,15 +60,15 @@
 
   .dark-barbie {
     --background: 330 15% 10%;
-    --foreground: 300 100% 90%;
+    --foreground: 330 100% 95%;
     --card: 330 15% 15%;
-    --card-foreground: 300 100% 90%;
+    --card-foreground: 330 100% 95%;
     --popover: 330 15% 15%;
-    --popover-foreground: 300 100% 90%;
+    --popover-foreground: 330 100% 95%;
     --primary: 330 90% 65%;
     --primary-foreground: 330 90% 10%;
     --secondary: 330 15% 25%;
-    --secondary-foreground: 300 100% 90%;
+    --secondary-foreground: 330 100% 90%;
     --muted: 330 15% 25%;
     --muted-foreground: 330 20% 65%;
     --accent: 330 90% 55%;
@@ -80,25 +80,25 @@
     --ring: 330 90% 65%;
   }
 
-  .dark-captain-america {
-    --background: 220 15% 10%;
-    --foreground: 210 40% 98%;
-    --card: 220 15% 15%;
-    --card-foreground: 210 40% 98%;
-    --popover: 220 15% 15%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
+  .light-captain-america {
+    --background: 210 40% 98%; /* Light Grayish Blue */
+    --foreground: 220 15% 20%; /* Dark Blue */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 220 15% 20%; /* Dark Blue */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 220 15% 20%; /* Dark Blue */
+    --primary: 217 91% 60%; /* Bright Blue */
     --primary-foreground: 210 40% 98%;
-    --secondary: 217 33% 25%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 25%;
-    --muted-foreground: 210 40% 65%;
-    --accent: 0 84% 60%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 220 15% 20%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 220 15% 45%;
+    --accent: 0 84% 60%; /* Red */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
+    --border: 210 40% 90%;
+    --input: 210 40% 90%;
     --ring: 217 91% 60%;
   }
 }

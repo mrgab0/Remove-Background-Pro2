@@ -11,14 +11,14 @@ export default function AjustesPage() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
-    document.body.classList.remove('dark', 'dark-barbie', 'dark-captain-america');
+    document.body.classList.remove('dark', 'dark-barbie', 'light-captain-america');
     document.body.classList.add(savedTheme);
   }, []);
 
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
-    document.body.classList.remove('dark', 'dark-barbie', 'dark-captain-america');
+    document.body.classList.remove('dark', 'dark-barbie', 'light-captain-america');
     document.body.classList.add(newTheme);
   };
 
@@ -46,7 +46,7 @@ export default function AjustesPage() {
                 <Label htmlFor="barbie">Barbie Dark Theme</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="dark-captain-america" id="captain-america" />
+                <RadioGroupItem value="light-captain-america" id="captain-america" />
                 <Label htmlFor="captain-america">Captain America Theme</Label>
               </div>
             </RadioGroup>
